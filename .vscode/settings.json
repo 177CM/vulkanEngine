@@ -1,0 +1,10 @@
+{
+    "C_Cpp.errorSquiggles": "enabled",
+    "files.associations": {
+        "sstream": "cpp",
+        "cmath": "cpp",
+        "cassert": "cpp",
+        "memory": "cpp",
+        "vector": "cpp"
+    }
+}
