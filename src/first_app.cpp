@@ -128,24 +128,25 @@ namespace cjh
 
 	void FirstApp::loadGameObjects()
 	{
-		std::shared_ptr<CjhModel> lveModel =
-			CjhModel::createModelFromFile(cjhDevice, "models/flat_vase.obj");
-		auto flatVase = CjhGameObject::createGameObject();
-		flatVase.model = lveModel;
-		flatVase.transform.translation = {-.5f, .5f, 0.f};
-		flatVase.transform.scale = {3.f, 1.5f, 3.f};
-		gameObjects.emplace(flatVase.getId(), std::move(flatVase));
+		std::shared_ptr<CjhModel> model =
+			CjhModel::createModelFromFile(cjhDevice, "models/bunny.obj");
 
-		lveModel = CjhModel::createModelFromFile(cjhDevice, "models/smooth_vase.obj");
-		auto smoothVase = CjhGameObject::createGameObject();
-		smoothVase.model = lveModel;
-		smoothVase.transform.translation = {.5f, .5f, 0.f};
-		smoothVase.transform.scale = {3.f, 1.5f, 3.f};
-		gameObjects.emplace(smoothVase.getId(), std::move(smoothVase));
+		auto bunny = CjhGameObject::createGameObject();
+		bunny.model = model;
+		bunny.transform.translation = glm::vec3(-.5f, .5f, 0.5f);
+		bunny.transform.scale = glm::vec3(.3f) * glm::vec3(1.0f, -1.0f, 1.0f);
+		gameObjects.emplace(bunny.getId(), std::move(bunny));
 
-		lveModel = CjhModel::createModelFromFile(cjhDevice, "models/quad.obj");
+		model = CjhModel::createModelFromFile(cjhDevice, "models/dragon.obj");
+		auto dragon = CjhGameObject::createGameObject();
+		dragon.model = model;
+		dragon.transform.translation = glm::vec3(.5f, .2f, 0.5f);
+		dragon.transform.scale = glm::vec3(1.0f, -1.0f, 1.0f);
+		gameObjects.emplace(dragon.getId(), std::move(dragon));
+
+		model = CjhModel::createModelFromFile(cjhDevice, "models/quad.obj");
 		auto floor = CjhGameObject::createGameObject();
-		floor.model = lveModel;
+		floor.model = model;
 		floor.transform.translation = {0.f, .5f, 0.f};
 		floor.transform.scale = {3.f, 1.f, 3.f};
 		gameObjects.emplace(floor.getId(), std::move(floor));
