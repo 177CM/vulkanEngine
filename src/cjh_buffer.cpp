@@ -23,7 +23,7 @@ namespace cjh
      *
      * @return VkResult of the buffer mapping call
      */
-    VkDeviceSize LveBuffer::getAlignment(VkDeviceSize instanceSize, VkDeviceSize minOffsetAlignment)
+    VkDeviceSize CjhBuffer::getAlignment(VkDeviceSize instanceSize, VkDeviceSize minOffsetAlignment)
     {
         if (minOffsetAlignment > 0)
         {
@@ -32,7 +32,7 @@ namespace cjh
         return instanceSize;
     }
 
-    LveBuffer::LveBuffer(
+    CjhBuffer::CjhBuffer(
         CjhDevice &device,
         VkDeviceSize instanceSize,
         uint32_t instanceCount,
@@ -50,7 +50,7 @@ namespace cjh
         device.createBuffer(bufferSize, usageFlags, memoryPropertyFlags, buffer, memory);
     }
 
-    LveBuffer::~LveBuffer()
+    CjhBuffer::~CjhBuffer()
     {
         unmap();
         vkDestroyBuffer(cjhDevice.device(), buffer, nullptr);
@@ -66,7 +66,7 @@ namespace cjh
      *
      * @return VkResult of the buffer mapping call
      */
-    VkResult LveBuffer::map(VkDeviceSize size, VkDeviceSize offset)
+    VkResult CjhBuffer::map(VkDeviceSize size, VkDeviceSize offset)
     {
         assert(buffer && memory && "Called map on buffer before create");
 
@@ -78,7 +78,7 @@ namespace cjh
      *
      * @note Does not return a result as vkUnmapMemory can't fail
      */
-    void LveBuffer::unmap()
+    void CjhBuffer::unmap()
     {
         if (mapped)
         {
@@ -96,7 +96,7 @@ namespace cjh
      * @param offset (Optional) Byte offset from beginning of mapped region
      *
      */
-    void LveBuffer::writeToBuffer(void *data, VkDeviceSize size, VkDeviceSize offset)
+    void CjhBuffer::writeToBuffer(void *data, VkDeviceSize size, VkDeviceSize offset)
     {
         assert(mapped && "Cannot copy to unmapped buffer");
 
@@ -123,7 +123,7 @@ namespace cjh
      *
      * @return VkResult of the flush call
      */
-    VkResult LveBuffer::flush(VkDeviceSize size, VkDeviceSize offset)
+    VkResult CjhBuffer::flush(VkDeviceSize size, VkDeviceSize offset)
     {
         VkMappedMemoryRange mappedRange = {};
         mappedRange.sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
@@ -144,7 +144,7 @@ namespace cjh
      *
      * @return VkResult of the invalidate call
      */
-    VkResult LveBuffer::invalidate(VkDeviceSize size, VkDeviceSize offset)
+    VkResult CjhBuffer::invalidate(VkDeviceSize size, VkDeviceSize offset)
     {
         VkMappedMemoryRange mappedRange = {};
         mappedRange.sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
@@ -162,7 +162,7 @@ namespace cjh
      *
      * @return VkDescriptorBufferInfo of specified offset and range
      */
-    VkDescriptorBufferInfo LveBuffer::descriptorInfo(VkDeviceSize size, VkDeviceSize offset)
+    VkDescriptorBufferInfo CjhBuffer::descriptorInfo(VkDeviceSize size, VkDeviceSize offset)
     {
         return VkDescriptorBufferInfo{
             buffer,
@@ -178,7 +178,7 @@ namespace cjh
      * @param index Used in offset calculation
      *
      */
-    void LveBuffer::writeToIndex(void *data, int index)
+    void CjhBuffer::writeToIndex(void *data, int index)
     {
         writeToBuffer(data, instanceSize, index * alignmentSize);
     }
@@ -189,7 +189,7 @@ namespace cjh
      * @param index Used in offset calculation
      *
      */
-    VkResult LveBuffer::flushIndex(int index) { return flush(alignmentSize, index * alignmentSize); }
+    VkResult CjhBuffer::flushIndex(int index) { return flush(alignmentSize, index * alignmentSize); }
 
     /**
      * Create a buffer info descriptor
@@ -198,7 +198,7 @@ namespace cjh
      *
      * @return VkDescriptorBufferInfo for instance at index
      */
-    VkDescriptorBufferInfo LveBuffer::descriptorInfoForIndex(int index)
+    VkDescriptorBufferInfo CjhBuffer::descriptorInfoForIndex(int index)
     {
         return descriptorInfo(alignmentSize, index * alignmentSize);
     }
@@ -212,7 +212,7 @@ namespace cjh
      *
      * @return VkResult of the invalidate call
      */
-    VkResult LveBuffer::invalidateIndex(int index)
+    VkResult CjhBuffer::invalidateIndex(int index)
     {
         return invalidate(alignmentSize, index * alignmentSize);
     }

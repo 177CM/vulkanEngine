@@ -57,7 +57,7 @@ namespace cjh
     VkDeviceSize bufferSize = sizeof(vertices[0]) * vertexCount;
     uint32_t vertexSize = sizeof(vertices[0]);
 
-    LveBuffer stagingBuffer{
+    CjhBuffer stagingBuffer{
         cjhDevice,
         vertexSize,
         vertexCount,
@@ -68,7 +68,7 @@ namespace cjh
     stagingBuffer.map();
     stagingBuffer.writeToBuffer((void *)vertices.data());
 
-    vertexBuffer = std::make_unique<LveBuffer>(
+    vertexBuffer = std::make_unique<CjhBuffer>(
         cjhDevice,
         vertexSize,
         vertexCount,
@@ -90,7 +90,7 @@ namespace cjh
     VkDeviceSize bufferSize = sizeof(indices[0]) * indexCount;
     uint32_t indexSize = sizeof(indices[0]);
 
-    LveBuffer stagingBuffer{
+    CjhBuffer stagingBuffer{
         cjhDevice,
         indexSize,
         indexCount,
@@ -101,7 +101,7 @@ namespace cjh
     stagingBuffer.map();
     stagingBuffer.writeToBuffer((void *)indices.data());
 
-    indexBuffer = std::make_unique<LveBuffer>(
+    indexBuffer = std::make_unique<CjhBuffer>(
         cjhDevice,
         indexSize,
         indexCount,

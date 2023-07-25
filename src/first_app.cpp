@@ -35,10 +35,10 @@ namespace cjh
 
 	void FirstApp::run()
 	{
-		std::vector<std::unique_ptr<LveBuffer>> uboBuffers(CjhSwapChain::MAX_FRAMES_IN_FLIGHT);
+		std::vector<std::unique_ptr<CjhBuffer>> uboBuffers(CjhSwapChain::MAX_FRAMES_IN_FLIGHT);
 		for (int i = 0; i < uboBuffers.size(); i++)
 		{
-			uboBuffers[i] = std::make_unique<LveBuffer>(
+			uboBuffers[i] = std::make_unique<CjhBuffer>(
 				cjhDevice,
 				sizeof(GlobalUbo),
 				1,
@@ -76,6 +76,8 @@ namespace cjh
 		KeyboardMovementController cameraController{};
 
 		auto currentTime = std::chrono::high_resolution_clock::now();
+
+		// Render Loop Here!!
 		while (!lveWindow.shouldClose())
 		{
 			glfwPollEvents();

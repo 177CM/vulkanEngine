@@ -5,20 +5,20 @@
 namespace cjh
 {
 
-	class LveBuffer
+	class CjhBuffer
 	{
 	public:
-		LveBuffer(
+		CjhBuffer(
 			CjhDevice &device,
 			VkDeviceSize instanceSize,
 			uint32_t instanceCount,
 			VkBufferUsageFlags usageFlags,
 			VkMemoryPropertyFlags memoryPropertyFlags,
 			VkDeviceSize minOffsetAlignment = 1);
-		~LveBuffer();
+		~CjhBuffer();
 
-		LveBuffer(const LveBuffer &) = delete;
-		LveBuffer &operator=(const LveBuffer &) = delete;
+		CjhBuffer(const CjhBuffer &) = delete;
+		CjhBuffer &operator=(const CjhBuffer &) = delete;
 
 		VkResult map(VkDeviceSize size = VK_WHOLE_SIZE, VkDeviceSize offset = 0);
 		void unmap();

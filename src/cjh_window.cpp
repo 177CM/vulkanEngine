@@ -38,10 +38,10 @@ namespace cjh
 
   void CjhWindow::framebufferResizeCallback(GLFWwindow *window, int width, int height)
   {
-    auto lveWindow = reinterpret_cast<CjhWindow *>(glfwGetWindowUserPointer(window));
-    lveWindow->framebufferResized = true;
-    lveWindow->width = width;
-    lveWindow->height = height;
+    auto cjhWindow = reinterpret_cast<CjhWindow *>(glfwGetWindowUserPointer(window));
+    cjhWindow->framebufferResized = true;
+    cjhWindow->width = width;
+    cjhWindow->height = height;
   }
 
 } // namespace lve

@@ -60,11 +60,11 @@ namespace cjh
 
     CjhDevice &cjhDevice;
 
-    std::unique_ptr<LveBuffer> vertexBuffer;
+    std::unique_ptr<CjhBuffer> vertexBuffer;
     uint32_t vertexCount;
 
     bool hasIndexBuffer = false;
-    std::unique_ptr<LveBuffer> indexBuffer;
+    std::unique_ptr<CjhBuffer> indexBuffer;
     uint32_t indexCount;
   };
 } // namespace lve
