@@ -63,11 +63,11 @@ namespace cjh
 
 		SimpleRenderSystem simpleRenderSystem{
 			cjhDevice,
-			lveRenderer.getSwapChainRenderPass(),
+			cjhRenderer.getSwapChainRenderPass(),
 			globalSetLayout->getDescriptorSetLayout()};
 		PointLightSystem pointLightSystem{
 			cjhDevice,
-			lveRenderer.getSwapChainRenderPass(),
+			cjhRenderer.getSwapChainRenderPass(),
 			globalSetLayout->getDescriptorSetLayout()};
 		CjhCamera camera{};
 
@@ -78,7 +78,7 @@ namespace cjh
 		auto currentTime = std::chrono::high_resolution_clock::now();
 
 		// Render Loop Here!!
-		while (!lveWindow.shouldClose())
+		while (!cjhWindow.shouldClose())
 		{
 			glfwPollEvents();
 
@@ -87,15 +87,15 @@ namespace cjh
 				std::chrono::duration<float, std::chrono::seconds::period>(newTime - currentTime).count();
 			currentTime = newTime;
 
-			cameraController.moveInPlaneXZ(lveWindow.getGLFWwindow(), frameTime, viewerObject);
+			cameraController.moveInPlaneXZ(cjhWindow.getGLFWwindow(), frameTime, viewerObject);
 			camera.setViewYXZ(viewerObject.transform.translation, viewerObject.transform.rotation);
 
-			float aspect = lveRenderer.getAspectRatio();
+			float aspect = cjhRenderer.getAspectRatio();
 			camera.setPerspectiveProjection(glm::radians(50.f), aspect, 0.1f, 100.f);
 
-			if (auto commandBuffer = lveRenderer.beginFrame())
+			if (auto commandBuffer = cjhRenderer.beginFrame())
 			{
-				int frameIndex = lveRenderer.getFrameIndex();
+				int frameIndex = cjhRenderer.getFrameIndex();
 				FrameInfo frameInfo{
 					frameIndex,
 					frameTime,
@@ -114,14 +114,14 @@ namespace cjh
 				uboBuffers[frameIndex]->flush();
 
 				// render
-				lveRenderer.beginSwapChainRenderPass(commandBuffer);
+				cjhRenderer.beginSwapChainRenderPass(commandBuffer);
 
 				// order here matters
 				simpleRenderSystem.renderGameObjects(frameInfo);
 				pointLightSystem.render(frameInfo);
 
-				lveRenderer.endSwapChainRenderPass(commandBuffer);
-				lveRenderer.endFrame();
+				cjhRenderer.endSwapChainRenderPass(commandBuffer);
+				cjhRenderer.endFrame();
 			}
 		}
 

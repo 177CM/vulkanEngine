@@ -44,15 +44,15 @@ namespace cjh
     CjhDevice &operator=(CjhDevice &&) = delete;
 
     // Help function
-    VkCommandPool getCommandPool() { return commandPool; }
-    VkDevice device() { return device_; }
-    VkSurfaceKHR surface() { return surface_; }
-    VkQueue graphicsQueue() { return graphicsQueue_; }
-    VkQueue presentQueue() { return presentQueue_; }
+    VkCommandPool getCommandPool() { return m_CommandPool; }
+    VkDevice device() { return m_Device; }
+    VkSurfaceKHR surface() { return m_Surface; }
+    VkQueue graphicsQueue() { return m_GraphicsQueue; }
+    VkQueue presentQueue() { return m_PresentQueue; }
 
-    SwapChainSupportDetails getSwapChainSupport() { return querySwapChainSupport(physicalDevice); }
+    SwapChainSupportDetails getSwapChainSupport() { return querySwapChainSupport(m_PhysicalDevice); }
     uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
-    QueueFamilyIndices findPhysicalQueueFamilies() { return findQueueFamilies(physicalDevice); }
+    QueueFamilyIndices findPhysicalQueueFamilies() { return findQueueFamilies(m_PhysicalDevice); }
     VkFormat findSupportedFormat(
         const std::vector<VkFormat> &candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
 
@@ -91,20 +91,20 @@ namespace cjh
     bool checkValidationLayerSupport();
     QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device);
     void populateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT &createInfo);
-    void hasGflwRequiredInstanceExtensions();
+    void hasGlfwRequiredInstanceExtensions();
     bool checkDeviceExtensionSupport(VkPhysicalDevice device);
     SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice device);
 
-    VkInstance instance;
-    VkDebugUtilsMessengerEXT debugMessenger;
-    VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
-    CjhWindow &window;
-    VkCommandPool commandPool;
+    VkInstance m_Instance;
+    VkDebugUtilsMessengerEXT m_DebugMessenger;
+    VkPhysicalDevice m_PhysicalDevice = VK_NULL_HANDLE;
+    CjhWindow &m_Window;
+    VkCommandPool m_CommandPool;
 
-    VkDevice device_;
-    VkSurfaceKHR surface_;
-    VkQueue graphicsQueue_;
-    VkQueue presentQueue_;
+    VkDevice m_Device;
+    VkSurfaceKHR m_Surface;
+    VkQueue m_GraphicsQueue;
+    VkQueue m_PresentQueue;
 
     const std::vector<const char *> validationLayers = {"VK_LAYER_KHRONOS_validation"};
     const std::vector<const char *> deviceExtensions = {VK_KHR_SWAPCHAIN_EXTENSION_NAME};

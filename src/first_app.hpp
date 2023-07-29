@@ -29,9 +29,9 @@ namespace cjh
   private:
     void loadGameObjects();
 
-    CjhWindow lveWindow{WIDTH, HEIGHT, "Vulkan Tutorial"};
-    CjhDevice cjhDevice{lveWindow};
-    CjhRenderer lveRenderer{lveWindow, cjhDevice};
+    CjhWindow cjhWindow{WIDTH, HEIGHT, "Vulkan Tutorial"};
+    CjhDevice cjhDevice{cjhWindow};
+    CjhRenderer cjhRenderer{cjhWindow, cjhDevice};
 
     // note: order of declarations matters
     std::unique_ptr<LveDescriptorPool> globalPool{};

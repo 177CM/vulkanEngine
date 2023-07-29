@@ -29,7 +29,7 @@ namespace cjh
 
     CjhDevice &cjhDevice;
 
-    std::unique_ptr<CjhPipeline> lvePipeline;
-    VkPipelineLayout pipelineLayout;
+    std::unique_ptr<CjhPipeline> cjhPipeline;
+    VkPipelineLayout m_PipelineLayout;
   };
 } // namespace lve

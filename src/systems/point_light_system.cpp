@@ -32,7 +32,7 @@ namespace cjh
 
   PointLightSystem::~PointLightSystem()
   {
-    vkDestroyPipelineLayout(cjhDevice.device(), pipelineLayout, nullptr);
+    vkDestroyPipelineLayout(cjhDevice.device(), m_PipelineLayout, nullptr);
   }
 
   void PointLightSystem::createPipelineLayout(VkDescriptorSetLayout globalSetLayout)
@@ -50,7 +50,7 @@ namespace cjh
     pipelineLayoutInfo.pSetLayouts = descriptorSetLayouts.data();
     pipelineLayoutInfo.pushConstantRangeCount = 1;
     pipelineLayoutInfo.pPushConstantRanges = &pushConstantRange;
-    if (vkCreatePipelineLayout(cjhDevice.device(), &pipelineLayoutInfo, nullptr, &pipelineLayout) !=
+    if (vkCreatePipelineLayout(cjhDevice.device(), &pipelineLayoutInfo, nullptr, &m_PipelineLayout) !=
         VK_SUCCESS)
     {
       throw std::runtime_error("failed to create pipeline layout!");
@@ -59,7 +59,7 @@ namespace cjh
 
   void PointLightSystem::createPipeline(VkRenderPass renderPass)
   {
-    assert(pipelineLayout != nullptr && "Cannot create pipeline before pipeline layout");
+    assert(m_PipelineLayout != nullptr && "Cannot create pipeline before pipeline layout");
 
     PipelineConfigInfo pipelineConfig{};
     CjhPipeline::defaultPipelineConfigInfo(pipelineConfig);
@@ -67,8 +67,8 @@ namespace cjh
     pipelineConfig.attributeDescriptions.clear();
     pipelineConfig.bindingDescriptions.clear();
     pipelineConfig.renderPass = renderPass;
-    pipelineConfig.pipelineLayout = pipelineLayout;
-    lvePipeline = std::make_unique<CjhPipeline>(
+    pipelineConfig.pipelineLayout = m_PipelineLayout;
+    cjhPipeline = std::make_unique<CjhPipeline>(
         cjhDevice,
         "shaders/spv/point_light.vert.spv",
         "shaders/spv/point_light.frag.spv",
@@ -115,12 +115,12 @@ namespace cjh
       sorted[disSquared] = obj.getId();
     }
 
-    lvePipeline->bind(frameInfo.commandBuffer);
+    cjhPipeline->bind(frameInfo.commandBuffer);
 
     vkCmdBindDescriptorSets(
         frameInfo.commandBuffer,
         VK_PIPELINE_BIND_POINT_GRAPHICS,
-        pipelineLayout,
+        m_PipelineLayout,
         0,
         1,
         &frameInfo.globalDescriptorSet,
@@ -140,7 +140,7 @@ namespace cjh
 
       vkCmdPushConstants(
           frameInfo.commandBuffer,
-          pipelineLayout,
+          m_PipelineLayout,
           VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT,
           0,
           sizeof(PointLightPushConstants),

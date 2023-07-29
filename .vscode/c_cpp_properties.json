@@ -8,6 +8,7 @@
                 "D:/Code/vendor/glm/glm",
                 "D:/VulkanSDK/Include",
                 "./external/tinyobjloader",
+                "./external/imgui",
                 "./src"
             ],
             "defines": [
