@@ -1,8 +1,8 @@
 #include "first_app.hpp"
 
-#include "keyboard_movement_controller.hpp"
-#include "cjh_buffer.hpp"
-#include "cjh_camera.hpp"
+#include "vk/keyboard_movement_controller.hpp"
+#include "vk/cjh_buffer.hpp"
+#include "vk/cjh_camera.hpp"
 #include "systems/point_light_system.hpp"
 #include "systems/simple_render_system.hpp"
 

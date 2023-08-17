@@ -1,10 +1,10 @@
 #pragma once
 
-#include "cjh_descriptors.hpp"
-#include "cjh_device.hpp"
-#include "cjh_game_object.hpp"
-#include "cjh_renderer.hpp"
-#include "cjh_window.hpp"
+#include "vk/cjh_descriptors.hpp"
+#include "vk/cjh_device.hpp"
+#include "vk/cjh_game_object.hpp"
+#include "vk/cjh_renderer.hpp"
+#include "vk/cjh_window.hpp"
 
 // std
 #include <memory>
