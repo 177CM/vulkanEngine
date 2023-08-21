@@ -1,7 +1,7 @@
 #pragma once
 #include "cjh_descriptors.hpp"
 
-#include <imgui/imgui.h>
+#include <imgui.h>
 
 // std
 #include <cassert>
@@ -100,30 +100,36 @@ namespace cjh
 		const std::vector<VkDescriptorPoolSize> &poolSizes)
 		: cjhDevice{cjhDevice}
 	{
-		VkDescriptorPoolCreateInfo descriptorPoolInfo{};
-		descriptorPoolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
-		descriptorPoolInfo.poolSizeCount = static_cast<uint32_t>(poolSizes.size());
-		descriptorPoolInfo.pPoolSizes = poolSizes.data();
-		descriptorPoolInfo.maxSets = maxSets;
-		descriptorPoolInfo.flags = poolFlags;
+		// //Create a tight Descriptor Pool
+		// {
+		// 	VkDescriptorPoolCreateInfo descriptorPoolInfo{};
+		// 	descriptorPoolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
+		// 	descriptorPoolInfo.poolSizeCount = static_cast<uint32_t>(poolSizes.size());
+		// 	descriptorPoolInfo.pPoolSizes = poolSizes.data();
+		// 	descriptorPoolInfo.maxSets = maxSets;
+		// 	descriptorPoolInfo.flags = poolFlags;
+		// 	if (vkCreateDescriptorPool(cjhDevice.device(), &descriptorPoolInfo, nullptr, &descriptorPool) !=
+		// 		VK_SUCCESS)
+		// 	{
+		// 		throw std::runtime_error("failed to create descriptor pool!");
+		// 	}
+		// }
 
-
-		// Create Descriptor Pool
+		// Create a big enough Descriptor Pool
 		{
 			VkDescriptorPoolSize pool_sizes[] =
-			{
-				{ VK_DESCRIPTOR_TYPE_SAMPLER, 1000 },
-				{ VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1000 },
-				{ VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE, 1000 },
-				{ VK_DESCRIPTOR_TYPE_STORAGE_IMAGE, 1000 },
-				{ VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER, 1000 },
-				{ VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER, 1000 },
-				{ VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1000 },
-				{ VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1000 },
-				{ VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, 1000 },
-				{ VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC, 1000 },
-				{ VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT, 1000 }
-			};
+				{
+					{VK_DESCRIPTOR_TYPE_SAMPLER, 1000},
+					{VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1000},
+					{VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE, 1000},
+					{VK_DESCRIPTOR_TYPE_STORAGE_IMAGE, 1000},
+					{VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER, 1000},
+					{VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER, 1000},
+					{VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1000},
+					{VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1000},
+					{VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, 1000},
+					{VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC, 1000},
+					{VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT, 1000}};
 			VkDescriptorPoolCreateInfo pool_info = {};
 			pool_info.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
 			pool_info.flags = VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT;
@@ -135,14 +141,7 @@ namespace cjh
 			{
 				throw std::runtime_error("failed to create descriptor pool!");
 			}
-			
 		}
-
-		//if (vkCreateDescriptorPool(cjhDevice.device(), &descriptorPoolInfo, nullptr, &descriptorPool) !=
-		//	VK_SUCCESS)
-		//{
-		//	throw std::runtime_error("failed to create descriptor pool!");
-		//}
 	}
 
 	CjhDescriptorPool::~CjhDescriptorPool()

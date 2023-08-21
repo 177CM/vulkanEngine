@@ -41,29 +41,9 @@ namespace cjh
         {
             // Use any command queue
             VkCommandPool command_pool = m_pDevice->getCommandPool();
-            VkCommandBuffer command_buffer = m_pRenderer->getCurrentCommandBuffer();
-
-            //auto err = vkResetCommandPool(init_info.Device, command_pool, 0);
-            //check_vk_result(err);
-            VkCommandBufferBeginInfo begin_info = {};
-            begin_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-            begin_info.flags |= VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
-            auto err = vkBeginCommandBuffer(command_buffer, &begin_info);
-            check_vk_result(err);
-
+            VkCommandBuffer command_buffer = m_pRenderer->beginSingleTimeCommands();
             ImGui_ImplVulkan_CreateFontsTexture(command_buffer);
-
-            VkSubmitInfo end_info = {};
-            end_info.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-            end_info.commandBufferCount = 1;
-            end_info.pCommandBuffers = &command_buffer;
-            err = vkEndCommandBuffer(command_buffer);
-            check_vk_result(err);
-            err = vkQueueSubmit(m_pDevice->graphicsQueue(), 1, &end_info, VK_NULL_HANDLE);
-            check_vk_result(err);
-
-            err = vkDeviceWaitIdle(m_pDevice->device());
-            check_vk_result(err);
+            m_pRenderer->endSingleTimeCommands(command_buffer);
             ImGui_ImplVulkan_DestroyFontUploadObjects();
         }
     }
@@ -92,6 +72,13 @@ namespace cjh
 
             ImGui::SliderFloat("float", &f, 0.0f, 1.0f);             // Edit 1 float using a slider from 0.0f to 1.0f
             ImGui::ColorEdit3("clear color", (float *)&clear_color); // Edit 3 floats representing a color
+
+            if (ImGui::Button("Button")) // Buttons return true when clicked (most widgets return true when edited/activated)
+                counter++;
+            ImGui::SameLine();
+            ImGui::Text("counter = %d", counter);
+
+            ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
             ImGui::End();
         }
 

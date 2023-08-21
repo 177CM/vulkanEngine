@@ -24,9 +24,12 @@ namespace cjh
     float getAspectRatio() const { return cjhSwapChain->extentAspectRatio(); }
     bool isFrameInProgress() const { return isFrameStarted; }
 
+    VkCommandBuffer beginSingleTimeCommands();
+    void endSingleTimeCommands(VkCommandBuffer commandbuffer);
+
     VkCommandBuffer getCurrentCommandBuffer() const
     {
-      //assert(isFrameStarted && "Cannot get command buffer when frame not in progress");
+      assert(isFrameStarted && "Cannot get command buffer when frame not in progress");
       return commandBuffers[currentFrameIndex];
     }
 
