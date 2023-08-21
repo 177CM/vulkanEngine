@@ -42,10 +42,10 @@ namespace cjh
 		VkDescriptorSetLayout descriptorSetLayout;
 		std::unordered_map<uint32_t, VkDescriptorSetLayoutBinding> bindings;
 
-		friend class LveDescriptorWriter;
+		friend class CjhDescriptorWriter;
 	};
 
-	class LveDescriptorPool
+	class CjhDescriptorPool
 	{
 	public:
 		class Builder
@@ -56,7 +56,7 @@ namespace cjh
 			Builder &addPoolSize(VkDescriptorType descriptorType, uint32_t count);
 			Builder &setPoolFlags(VkDescriptorPoolCreateFlags flags);
 			Builder &setMaxSets(uint32_t count);
-			std::unique_ptr<LveDescriptorPool> build() const;
+			std::unique_ptr<CjhDescriptorPool> build() const;
 
 		private:
 			CjhDevice &cjhDevice;
@@ -65,16 +65,19 @@ namespace cjh
 			VkDescriptorPoolCreateFlags poolFlags = 0;
 		};
 
-		LveDescriptorPool(
+		CjhDescriptorPool(
 			CjhDevice &cjhDevice,
 			uint32_t maxSets,
 			VkDescriptorPoolCreateFlags poolFlags,
 			const std::vector<VkDescriptorPoolSize> &poolSizes);
-		~LveDescriptorPool();
-		LveDescriptorPool(const LveDescriptorPool &) = delete;
-		LveDescriptorPool &operator=(const LveDescriptorPool &) = delete;
+		~CjhDescriptorPool();
+		CjhDescriptorPool(const CjhDescriptorPool &) = delete;
+		CjhDescriptorPool &operator=(const CjhDescriptorPool &) = delete;
 
-		bool allocateDescriptor(
+		VkDescriptorPool get() { return descriptorPool; }
+
+		bool
+		allocateDescriptor(
 			const VkDescriptorSetLayout descriptorSetLayout, VkDescriptorSet &descriptor) const;
 
 		void freeDescriptors(std::vector<VkDescriptorSet> &descriptors) const;
@@ -85,23 +88,23 @@ namespace cjh
 		CjhDevice &cjhDevice;
 		VkDescriptorPool descriptorPool;
 
-		friend class LveDescriptorWriter;
+		friend class CjhDescriptorWriter;
 	};
 
-	class LveDescriptorWriter
+	class CjhDescriptorWriter
 	{
 	public:
-		LveDescriptorWriter(CjhDescriptorSetLayout &setLayout, LveDescriptorPool &pool);
+		CjhDescriptorWriter(CjhDescriptorSetLayout &setLayout, CjhDescriptorPool &pool);
 
-		LveDescriptorWriter &writeBuffer(uint32_t binding, VkDescriptorBufferInfo *bufferInfo);
-		LveDescriptorWriter &writeImage(uint32_t binding, VkDescriptorImageInfo *imageInfo);
+		CjhDescriptorWriter &writeBuffer(uint32_t binding, VkDescriptorBufferInfo *bufferInfo);
+		CjhDescriptorWriter &writeImage(uint32_t binding, VkDescriptorImageInfo *imageInfo);
 
 		bool build(VkDescriptorSet &set);
 		void overwrite(VkDescriptorSet &set);
 
 	private:
 		CjhDescriptorSetLayout &setLayout;
-		LveDescriptorPool &pool;
+		CjhDescriptorPool &pool;
 		std::vector<VkWriteDescriptorSet> writes;
 	};
 

@@ -1,6 +1,8 @@
 #pragma once
 #include "cjh_descriptors.hpp"
 
+#include <imgui/imgui.h>
+
 // std
 #include <cassert>
 #include <stdexcept>
@@ -65,33 +67,33 @@ namespace cjh
 
 	// *************** Descriptor Pool Builder *********************
 
-	LveDescriptorPool::Builder &LveDescriptorPool::Builder::addPoolSize(
+	CjhDescriptorPool::Builder &CjhDescriptorPool::Builder::addPoolSize(
 		VkDescriptorType descriptorType, uint32_t count)
 	{
 		poolSizes.push_back({descriptorType, count});
 		return *this;
 	}
 
-	LveDescriptorPool::Builder &LveDescriptorPool::Builder::setPoolFlags(
+	CjhDescriptorPool::Builder &CjhDescriptorPool::Builder::setPoolFlags(
 		VkDescriptorPoolCreateFlags flags)
 	{
 		poolFlags = flags;
 		return *this;
 	}
-	LveDescriptorPool::Builder &LveDescriptorPool::Builder::setMaxSets(uint32_t count)
+	CjhDescriptorPool::Builder &CjhDescriptorPool::Builder::setMaxSets(uint32_t count)
 	{
 		maxSets = count;
 		return *this;
 	}
 
-	std::unique_ptr<LveDescriptorPool> LveDescriptorPool::Builder::build() const
+	std::unique_ptr<CjhDescriptorPool> CjhDescriptorPool::Builder::build() const
 	{
-		return std::make_unique<LveDescriptorPool>(cjhDevice, maxSets, poolFlags, poolSizes);
+		return std::make_unique<CjhDescriptorPool>(cjhDevice, maxSets, poolFlags, poolSizes);
 	}
 
 	// *************** Descriptor Pool *********************
 
-	LveDescriptorPool::LveDescriptorPool(
+	CjhDescriptorPool::CjhDescriptorPool(
 		CjhDevice &cjhDevice,
 		uint32_t maxSets,
 		VkDescriptorPoolCreateFlags poolFlags,
@@ -105,19 +107,50 @@ namespace cjh
 		descriptorPoolInfo.maxSets = maxSets;
 		descriptorPoolInfo.flags = poolFlags;
 
-		if (vkCreateDescriptorPool(cjhDevice.device(), &descriptorPoolInfo, nullptr, &descriptorPool) !=
-			VK_SUCCESS)
+
+		// Create Descriptor Pool
 		{
-			throw std::runtime_error("failed to create descriptor pool!");
+			VkDescriptorPoolSize pool_sizes[] =
+			{
+				{ VK_DESCRIPTOR_TYPE_SAMPLER, 1000 },
+				{ VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1000 },
+				{ VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE, 1000 },
+				{ VK_DESCRIPTOR_TYPE_STORAGE_IMAGE, 1000 },
+				{ VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER, 1000 },
+				{ VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER, 1000 },
+				{ VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1000 },
+				{ VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1000 },
+				{ VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, 1000 },
+				{ VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC, 1000 },
+				{ VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT, 1000 }
+			};
+			VkDescriptorPoolCreateInfo pool_info = {};
+			pool_info.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
+			pool_info.flags = VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT;
+			pool_info.maxSets = 1000 * IM_ARRAYSIZE(pool_sizes);
+			pool_info.poolSizeCount = (uint32_t)IM_ARRAYSIZE(pool_sizes);
+			pool_info.pPoolSizes = pool_sizes;
+			if (vkCreateDescriptorPool(cjhDevice.device(), &pool_info, nullptr, &descriptorPool) !=
+				VK_SUCCESS)
+			{
+				throw std::runtime_error("failed to create descriptor pool!");
+			}
+			
 		}
+
+		//if (vkCreateDescriptorPool(cjhDevice.device(), &descriptorPoolInfo, nullptr, &descriptorPool) !=
+		//	VK_SUCCESS)
+		//{
+		//	throw std::runtime_error("failed to create descriptor pool!");
+		//}
 	}
 
-	LveDescriptorPool::~LveDescriptorPool()
+	CjhDescriptorPool::~CjhDescriptorPool()
 	{
 		vkDestroyDescriptorPool(cjhDevice.device(), descriptorPool, nullptr);
 	}
 
-	bool LveDescriptorPool::allocateDescriptor(
+	bool CjhDescriptorPool::allocateDescriptor(
 		const VkDescriptorSetLayout descriptorSetLayout, VkDescriptorSet &descriptor) const
 	{
 		VkDescriptorSetAllocateInfo allocInfo{};
@@ -135,7 +168,7 @@ namespace cjh
 		return true;
 	}
 
-	void LveDescriptorPool::freeDescriptors(std::vector<VkDescriptorSet> &descriptors) const
+	void CjhDescriptorPool::freeDescriptors(std::vector<VkDescriptorSet> &descriptors) const
 	{
 		vkFreeDescriptorSets(
 			cjhDevice.device(),
@@ -144,17 +177,17 @@ namespace cjh
 			descriptors.data());
 	}
 
-	void LveDescriptorPool::resetPool()
+	void CjhDescriptorPool::resetPool()
 	{
 		vkResetDescriptorPool(cjhDevice.device(), descriptorPool, 0);
 	}
 
 	// *************** Descriptor Writer *********************
 
-	LveDescriptorWriter::LveDescriptorWriter(CjhDescriptorSetLayout &setLayout, LveDescriptorPool &pool)
+	CjhDescriptorWriter::CjhDescriptorWriter(CjhDescriptorSetLayout &setLayout, CjhDescriptorPool &pool)
 		: setLayout{setLayout}, pool{pool} {}
 
-	LveDescriptorWriter &LveDescriptorWriter::writeBuffer(
+	CjhDescriptorWriter &CjhDescriptorWriter::writeBuffer(
 		uint32_t binding, VkDescriptorBufferInfo *bufferInfo)
 	{
 		assert(setLayout.bindings.count(binding) == 1 && "Layout does not contain specified binding");
@@ -176,7 +209,7 @@ namespace cjh
 		return *this;
 	}
 
-	LveDescriptorWriter &LveDescriptorWriter::writeImage(
+	CjhDescriptorWriter &CjhDescriptorWriter::writeImage(
 		uint32_t binding, VkDescriptorImageInfo *imageInfo)
 	{
 		assert(setLayout.bindings.count(binding) == 1 && "Layout does not contain specified binding");
@@ -198,7 +231,7 @@ namespace cjh
 		return *this;
 	}
 
-	bool LveDescriptorWriter::build(VkDescriptorSet &set)
+	bool CjhDescriptorWriter::build(VkDescriptorSet &set)
 	{
 		bool success = pool.allocateDescriptor(setLayout.getDescriptorSetLayout(), set);
 		if (!success)
@@ -209,7 +242,7 @@ namespace cjh
 		return true;
 	}
 
-	void LveDescriptorWriter::overwrite(VkDescriptorSet &set)
+	void CjhDescriptorWriter::overwrite(VkDescriptorSet &set)
 	{
 		for (auto &write : writes)
 		{

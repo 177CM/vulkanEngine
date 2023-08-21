@@ -18,16 +18,21 @@
 #include <chrono>
 #include <stdexcept>
 
+#ifndef MODEL_PATH
+#define MODEL_PATH ../
+#endif
+
 namespace cjh
 {
 
 	FirstApp::FirstApp()
 	{
 		globalPool =
-			LveDescriptorPool::Builder(cjhDevice)
+			CjhDescriptorPool::Builder(cjhDevice)
 				.setMaxSets(CjhSwapChain::MAX_FRAMES_IN_FLIGHT)
 				.addPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, CjhSwapChain::MAX_FRAMES_IN_FLIGHT)
 				.build();
+		cjhUI.Init(globalPool->get());
 		loadGameObjects();
 	}
 
@@ -56,7 +61,7 @@ namespace cjh
 		for (int i = 0; i < globalDescriptorSets.size(); i++)
 		{
 			auto bufferInfo = uboBuffers[i]->descriptorInfo();
-			LveDescriptorWriter(*globalSetLayout, *globalPool)
+			CjhDescriptorWriter(*globalSetLayout, *globalPool)
 				.writeBuffer(0, &bufferInfo)
 				.build(globalDescriptorSets[i]);
 		}
@@ -119,6 +124,9 @@ namespace cjh
 				// order here matters
 				simpleRenderSystem.renderGameObjects(frameInfo);
 				pointLightSystem.render(frameInfo);
+
+				// ui draw
+				cjhUI.draw();
 
 				cjhRenderer.endSwapChainRenderPass(commandBuffer);
 				cjhRenderer.endFrame();

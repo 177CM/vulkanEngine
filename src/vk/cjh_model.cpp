@@ -13,8 +13,8 @@
 #include <cstring>
 #include <unordered_map>
 
-#ifndef ENGINE_DIR
-#define ENGINE_DIR "../"
+#ifndef MODEL_PATH
+#define MODEL_PATH "../"
 #endif
 
 namespace std
@@ -156,7 +156,8 @@ namespace cjh
 
   void CjhModel::Builder::loadModel(const std::string &filepath)
   {
-    std::string modelPath = ENGINE_DIR + filepath;
+
+    std::string modelPath = MODEL_PATH + filepath;
     tinyobj::attrib_t attrib;
     std::vector<tinyobj::shape_t> shapes;
     std::vector<tinyobj::material_t> materials;

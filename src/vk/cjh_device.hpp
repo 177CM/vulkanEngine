@@ -49,6 +49,8 @@ namespace cjh
     VkSurfaceKHR surface() { return m_Surface; }
     VkQueue graphicsQueue() { return m_GraphicsQueue; }
     VkQueue presentQueue() { return m_PresentQueue; }
+    VkInstance instance() { return m_Instance; }
+    VkPhysicalDevice physicalDevice() { return m_PhysicalDevice; }
 
     SwapChainSupportDetails getSwapChainSupport() { return querySwapChainSupport(m_PhysicalDevice); }
     uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);

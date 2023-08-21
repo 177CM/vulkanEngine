@@ -5,6 +5,7 @@
 #include "vk/cjh_game_object.hpp"
 #include "vk/cjh_renderer.hpp"
 #include "vk/cjh_window.hpp"
+#include "vk/cjh_ui.hpp"
 
 // std
 #include <memory>
@@ -32,9 +33,11 @@ namespace cjh
     CjhWindow cjhWindow{WIDTH, HEIGHT, "Vulkan Tutorial"};
     CjhDevice cjhDevice{cjhWindow};
     CjhRenderer cjhRenderer{cjhWindow, cjhDevice};
+    std::unique_ptr<CjhDescriptorPool> globalPool{};
+    CjhUI cjhUI{&cjhDevice, &cjhWindow, &cjhRenderer};
 
     // note: order of declarations matters
-    std::unique_ptr<LveDescriptorPool> globalPool{};
+
     CjhGameObject::Map gameObjects;
   };
 } // namespace lve

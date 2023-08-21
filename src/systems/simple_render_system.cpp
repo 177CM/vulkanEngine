@@ -101,7 +101,7 @@ namespace cjh
           &push);
       obj.model->bind(frameInfo.commandBuffer);
       obj.model->draw(frameInfo.commandBuffer);
-    }
+     }
   }
 
 } // namespace lve

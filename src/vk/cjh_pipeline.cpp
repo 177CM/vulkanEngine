@@ -8,8 +8,8 @@
 #include <iostream>
 #include <stdexcept>
 
-#ifndef ENGINE_DIR
-#define ENGINE_DIR "../"
+#ifndef ENGINE_PATH
+#define ENGINE_PATH "../"
 #endif
 
 namespace cjh
@@ -34,7 +34,7 @@ namespace cjh
 
   std::vector<char> CjhPipeline::readFile(const std::string &filepath)
   {
-    std::string enginePath = ENGINE_DIR + filepath;
+    std::string enginePath = ENGINE_PATH + filepath;
     std::ifstream file{enginePath, std::ios::ate | std::ios::binary};
 
     if (!file.is_open())
