@@ -18,6 +18,8 @@
 #include <chrono>
 #include <stdexcept>
 
+#include <string>
+
 #ifndef MODEL_PATH
 #define MODEL_PATH ../
 #endif
@@ -87,6 +89,8 @@ namespace cjh
 		{
 			glfwPollEvents();
 
+			cjhUI.NewFrame();
+
 			auto newTime = std::chrono::high_resolution_clock::now();
 			float frameTime =
 				std::chrono::duration<float, std::chrono::seconds::period>(newTime - currentTime).count();
@@ -125,8 +129,25 @@ namespace cjh
 				simpleRenderSystem.renderGameObjects(frameInfo);
 				pointLightSystem.render(frameInfo);
 
+				// ui control
+
+				ImGui::Begin("UI Controller");
+				ImGui::Text("This use for test ImGui window");
+				ImGui::Checkbox("Demo Window", cjhUI.getShowDemoWindow()); // Edit bools storing our window open/close state
+				ImGui::Checkbox("Another Window", cjhUI.getShowAnotherWindow());
+				ImGui::Checkbox("Imgui Hello World Window", cjhUI.getShowHelloWorldWindow());
+				for (auto &kv : frameInfo.gameObjects)
+				{
+					auto &obj = kv.second;
+					if (obj.model == nullptr)
+						continue;
+					ImGui::DragFloat3(std::to_string(obj.getId()).c_str(), (float *)&obj.transform.translation);
+				}
+
+				ImGui::End();
+
 				// ui draw
-				cjhUI.draw();
+				cjhUI.Draw();
 
 				cjhRenderer.endSwapChainRenderPass(commandBuffer);
 				cjhRenderer.endFrame();
@@ -144,14 +165,16 @@ namespace cjh
 		auto bunny = CjhGameObject::createGameObject();
 		bunny.model = model;
 		bunny.transform.translation = glm::vec3(-.5f, .5f, 0.5f);
-		bunny.transform.scale = glm::vec3(.3f) * glm::vec3(1.0f, -1.0f, 1.0f);
+		bunny.transform.scale = glm::vec3(.3f) * glm::vec3(1.0f, 1.0f, 1.0f);
+		bunny.transform.setIsVulkanModel(true);
 		gameObjects.emplace(bunny.getId(), std::move(bunny));
 
 		model = CjhModel::createModelFromFile(cjhDevice, "models/dragon.obj");
 		auto dragon = CjhGameObject::createGameObject();
 		dragon.model = model;
 		dragon.transform.translation = glm::vec3(.5f, .2f, 0.5f);
-		dragon.transform.scale = glm::vec3(1.0f, -1.0f, 1.0f);
+		dragon.transform.scale = glm::vec3(1.0f, 1.0f, 1.0f);
+		dragon.transform.setIsVulkanModel(true);
 		gameObjects.emplace(dragon.getId(), std::move(dragon));
 
 		model = CjhModel::createModelFromFile(cjhDevice, "models/quad.obj");

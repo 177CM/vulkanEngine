@@ -35,8 +35,9 @@ namespace cjh
         CjhUI(const CjhUI &) = delete;
         CjhUI &operator=(const CjhUI &) = delete;
         // Our state
-        bool show_demo_window = true;
+        bool show_demo_window = false;
         bool show_another_window = false;
+        bool show_hello_world_window = false;
         ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
         CjhDevice *m_pDevice;
@@ -44,9 +45,16 @@ namespace cjh
         CjhRenderer *m_pRenderer;
 
     public:
-        void draw();
+        void NewFrame();
+        void Draw();
         CjhUI(CjhDevice *cjhDevice, CjhWindow *cjhWindow, CjhRenderer *cjhRenderer);
         ~CjhUI();
         void Init(VkDescriptorPool descriptorPool);
+
+        // helper function
+
+        inline bool *getShowDemoWindow() { return &show_demo_window; }
+        inline bool *getShowAnotherWindow() { return &show_another_window; }
+        inline bool *getShowHelloWorldWindow() { return &show_hello_world_window; }
     };
 }

@@ -11,7 +11,11 @@ namespace cjh
 		const float s2 = glm::sin(rotation.x);
 		const float c1 = glm::cos(rotation.y);
 		const float s1 = glm::sin(rotation.y);
-		return glm::mat4{
+		if (isVulkanModel)
+		{
+			scale.y *= -1;
+		}
+		glm::mat4 res{
 			{
 				scale.x * (c1 * c3 + s1 * s2 * s3),
 				scale.x * (c2 * s3),
@@ -31,6 +35,11 @@ namespace cjh
 				0.0f,
 			},
 			{translation.x, translation.y, translation.z, 1.0f}};
+		if (isVulkanModel)
+		{
+			scale.y *= -1;
+		}
+		return res;
 	}
 
 	glm::mat3 TransformComponent::normalMatrix()
@@ -41,18 +50,22 @@ namespace cjh
 		const float s2 = glm::sin(rotation.x);
 		const float c1 = glm::cos(rotation.y);
 		const float s1 = glm::sin(rotation.y);
+		if (isVulkanModel)
+		{
+			scale.y *= -1;
+		}
 		const glm::vec3 invScale = 1.0f / scale;
 
-		return glm::mat3{
+		glm::mat3 res{
 			{
 				invScale.x * (c1 * c3 + s1 * s2 * s3),
 				invScale.x * (c2 * s3),
 				invScale.x * (c1 * s2 * s3 - c3 * s1),
 			},
 			{
-				invScale.y * (c3 * s1 * s2 - c1 * s3),
-				invScale.y * (c2 * c3),
-				invScale.y * (c1 * c3 * s2 + s1 * s3),
+				invScale.y * isVulkanModel ? -1 : 1 * (c3 * s1 * s2 - c1 * s3),
+				invScale.y * isVulkanModel ? -1 : 1 * (c2 * c3),
+				invScale.y * isVulkanModel ? -1 : 1 * (c1 * c3 * s2 + s1 * s3),
 			},
 			{
 				invScale.z * (c2 * s1),
@@ -60,6 +73,11 @@ namespace cjh
 				invScale.z * (c1 * c2),
 			},
 		};
+		if (isVulkanModel)
+		{
+			scale.y *= -1;
+		}
+		return res;
 	}
 
 	CjhGameObject CjhGameObject::makePointLight(float intensity, float radius, glm::vec3 color)
