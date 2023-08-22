@@ -156,7 +156,7 @@ namespace cjh
 
   void CjhModel::Builder::loadModel(const std::string &filepath)
   {
-
+    Timer timer;
     std::string modelPath = MODEL_PATH + filepath;
     tinyobj::attrib_t attrib;
     std::vector<tinyobj::shape_t> shapes;
@@ -212,9 +212,11 @@ namespace cjh
         if (uniqueVertices.count(vertex) == 0)
         {
           uniqueVertices[vertex] = static_cast<uint32_t>(vertices.size());
-          vertices.push_back(vertex);
+          // vertices.push_back(vertex);
+          vertices.emplace_back(std::move(vertex));
         }
-        indices.push_back(uniqueVertices[vertex]);
+        // indices.push_back(uniqueVertices[vertex]);
+        indices.emplace_back(std::move(uniqueVertices[vertex]));
       }
     }
   }
