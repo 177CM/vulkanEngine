@@ -9,6 +9,7 @@
                 "D:/VulkanSDK/Include",
                 "./external/tinyobjloader",
                 "./external/imgui",
+                "./external/stb",
                 "./src"
             ],
             "defines": [

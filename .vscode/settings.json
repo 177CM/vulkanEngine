@@ -60,7 +60,9 @@
         "typeinfo": "cpp",
         "semaphore": "cpp",
         "stop_token": "cpp",
-        "thread": "cpp"
+        "thread": "cpp",
+        "filesystem": "cpp",
+        "codecvt": "cpp"
     },
     "C_Cpp.default.compilerPath": "D:\\MinGW\\mingw64\\bin\\gcc.exe"
 }

@@ -71,6 +71,11 @@ if(NOT IMGUI_PATH)
   set(IMGUI_PATH external/imgui)
 endif()
 
+if(NOT STB_PATH)
+  message(STATUS "STB_PATH not specified in .env.cmake, using external/imgui")
+  set(STB_PATH external/imgui)
+endif()
+
 file(GLOB_RECURSE SOURCES
   ${PROJECT_SOURCE_DIR}/src/*.cpp
   ${PROJECT_SOURCE_DIR}/external/imgui/*)
@@ -101,6 +106,7 @@ if(WIN32)
     ${Vulkan_INCLUDE_DIRS}
     ${TINYOBJ_PATH}
     ${IMGUI_PATH}
+    ${STB_PATH}
     ${GLFW_INCLUDE_DIRS}
     ${GLM_PATH}
   )
@@ -117,6 +123,7 @@ elseif(UNIX)
     ${PROJECT_SOURCE_DIR}/src
     ${TINYOBJ_PATH}
     ${IMGUI_PATH}
+    ${STB_PATH}
   )
   target_link_libraries(${PROJECT_NAME} glfw ${Vulkan_LIBRARIES})
 endif()
