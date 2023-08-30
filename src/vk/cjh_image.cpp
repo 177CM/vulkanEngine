@@ -1,4 +1,6 @@
 #include "cjh_image.hpp"
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb_image.h>
 namespace cjh
 {
     CjhImage::CjhImage(CjhDevice &cjhDevice, std::string Path)
@@ -6,7 +8,7 @@ namespace cjh
     {
         // use stb to read the file
         stbi_uc *pixels = stbi_load(Path.c_str(), &m_imgHeight, &m_imgWidth, &m_channels, STBI_rgb_alpha);
-        VkDeviceSize imageSize = m_imgHeight * m_imgHeight * m_channels;
+        VkDeviceSize imageSize = m_imgHeight * m_imgHeight * 4;
 
         if (!pixels)
         {
@@ -19,12 +21,12 @@ namespace cjh
                                 VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
 
         stagingBuffer.map();
-        stagingBuffer.writeToBuffer(pixels, imageSize);
+        stagingBuffer.writeToBuffer(pixels);
         stagingBuffer.unmap();
 
         stbi_image_free(pixels);
 
-        createImage(VK_FORMAT_R8G8B8_SRGB,
+        createImage(VK_FORMAT_R8G8B8A8_SRGB,
                     VK_IMAGE_TILING_OPTIMAL,
                     VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL | VK_IMAGE_USAGE_SAMPLED_BIT,
                     VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
@@ -32,24 +34,27 @@ namespace cjh
         transitionImageLayout(VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
         copyBufferToImage(stagingBuffer.getBuffer(), m_image, static_cast<uint32_t>(m_imgHeight), static_cast<uint32_t>(m_imgWidth));
         transitionImageLayout(VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
-        }
+
+        creatImageView(VK_FORMAT_R8G8B8A8_SRGB);
+        createImageSampler();
+    }
 
     void CjhImage::createImage(VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties)
     {
         VkImageCreateInfo imageInfo{};
         imageInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
         imageInfo.imageType = VK_IMAGE_TYPE_2D;
+        imageInfo.format = format;
         imageInfo.extent.width = static_cast<uint32_t>(m_imgWidth);
         imageInfo.extent.height = static_cast<uint32_t>(m_imgHeight);
         imageInfo.extent.depth = 1;
         imageInfo.mipLevels = 1;
         imageInfo.arrayLayers = 1;
-        imageInfo.format = format;
-        imageInfo.tiling = tiling;
-        imageInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-        imageInfo.usage = usage;
         imageInfo.samples = VK_SAMPLE_COUNT_1_BIT;
+        imageInfo.tiling = tiling;
+        imageInfo.usage = usage;
         imageInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+        imageInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
 
         if (vkCreateImage(m_cjhDevice.device(), &imageInfo, nullptr, &m_image) != VK_SUCCESS)
         {
@@ -142,8 +147,9 @@ namespace cjh
             0, nullptr,
             0, nullptr,
             1, &barrier);
-
         m_cjhDevice.endSingleTimeCommands(commandBuffer);
+
+        m_imageLayout = newLayout;
     }
     CjhImage::~CjhImage()
     {
@@ -199,6 +205,11 @@ namespace cjh
         {
             throw std::runtime_error("failed to create texture sampler!");
         }
+    }
+
+    VkDescriptorImageInfo CjhImage::descriptorInfo()
+    {
+        return VkDescriptorImageInfo{m_imageSampler, m_imageView, m_imageLayout};
     }
 
 } // namespace cjh

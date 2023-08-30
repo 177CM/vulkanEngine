@@ -62,7 +62,8 @@
         "stop_token": "cpp",
         "thread": "cpp",
         "filesystem": "cpp",
-        "codecvt": "cpp"
+        "codecvt": "cpp",
+        "optional": "cpp"
     },
     "C_Cpp.default.compilerPath": "D:\\MinGW\\mingw64\\bin\\gcc.exe"
 }

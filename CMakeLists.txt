@@ -73,7 +73,7 @@ endif()
 
 if(NOT STB_PATH)
   message(STATUS "STB_PATH not specified in .env.cmake, using external/imgui")
-  set(STB_PATH external/imgui)
+  set(STB_PATH external/stb)
 endif()
 
 file(GLOB_RECURSE SOURCES
