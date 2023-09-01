@@ -119,19 +119,22 @@ namespace cjh
       auto &obj = kv.second;
       if (obj.model == nullptr)
         continue;
-      TexturePushConstantData push{};
-      push.modelMatrix = obj.transform.mat4();
-      push.normalMatrix = obj.transform.normalMatrix();
+      if (obj.model->m_render_system == "Texture")
+      {
+        TexturePushConstantData push{};
+        push.modelMatrix = obj.transform.mat4();
+        push.normalMatrix = obj.transform.normalMatrix();
 
-      vkCmdPushConstants(
-          frameInfo.commandBuffer,
-          m_PipelineLayout,
-          VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT,
-          0,
-          sizeof(TexturePushConstantData),
-          &push);
-      obj.model->bind(frameInfo.commandBuffer);
-      obj.model->draw(frameInfo.commandBuffer);
+        vkCmdPushConstants(
+            frameInfo.commandBuffer,
+            m_PipelineLayout,
+            VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT,
+            0,
+            sizeof(TexturePushConstantData),
+            &push);
+        obj.model->bind(frameInfo.commandBuffer);
+        obj.model->draw(frameInfo.commandBuffer);
+      }
     }
   }
 

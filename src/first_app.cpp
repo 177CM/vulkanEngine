@@ -69,10 +69,10 @@ namespace cjh
 				.build(globalDescriptorSets[i]);
 		}
 
-		// SimpleRenderSystem simpleRenderSystem{
-		// 	cjhDevice,
-		// 	cjhRenderer.getSwapChainRenderPass(),
-		// 	globalSetLayout->getDescriptorSetLayout()};
+		SimpleRenderSystem simpleRenderSystem{
+			cjhDevice,
+			cjhRenderer.getSwapChainRenderPass(),
+			globalSetLayout->getDescriptorSetLayout()};
 		PointLightSystem pointLightSystem{
 			cjhDevice,
 			cjhRenderer.getSwapChainRenderPass(),
@@ -132,7 +132,7 @@ namespace cjh
 				cjhRenderer.beginSwapChainRenderPass(commandBuffer);
 
 				// order here matters
-				// simpleRenderSystem.renderGameObjects(frameInfo);
+				simpleRenderSystem.renderGameObjects(frameInfo);
 				textureRenderSystem.renderGameObjects(frameInfo);
 				pointLightSystem.render(frameInfo);
 
@@ -166,25 +166,28 @@ namespace cjh
 
 	void FirstApp::loadGameObjects()
 	{
-		// std::shared_ptr<CjhModel> model =
-		// 	CjhModel::createModelFromFile(cjhDevice, "models/bunny.obj");
+		std::shared_ptr<CjhModel> model =
+			CjhModel::createModelFromFile(cjhDevice, "models/bunny.obj");
 
-		// auto bunny = CjhGameObject::createGameObject();
-		// bunny.model = model;
-		// bunny.transform.translation = glm::vec3(-.5f, .5f, 0.5f);
-		// bunny.transform.scale = glm::vec3(.3f) * glm::vec3(1.0f, 1.0f, 1.0f);
-		// bunny.transform.setIsVulkanModel(true);
-		// gameObjects.emplace(bunny.getId(), std::move(bunny));
+		auto bunny = CjhGameObject::createGameObject();
+		model->m_render_system = "Simple";
+		bunny.model = model;
+		bunny.transform.translation = glm::vec3(-.5f, .5f, 0.5f);
+		bunny.transform.scale = glm::vec3(.3f) * glm::vec3(1.0f, 1.0f, 1.0f);
+		bunny.transform.setIsVulkanModel(true);
+		gameObjects.emplace(bunny.getId(), std::move(bunny));
 
-		// model = CjhModel::createModelFromFile(cjhDevice, "models/dragon.obj");
-		// auto dragon = CjhGameObject::createGameObject();
-		// dragon.model = model;
-		// dragon.transform.translation = glm::vec3(.5f, .2f, 0.5f);
-		// dragon.transform.scale = glm::vec3(1.0f, 1.0f, 1.0f);
-		// dragon.transform.setIsVulkanModel(true);
-		// gameObjects.emplace(dragon.getId(), std::move(dragon));
+		model = CjhModel::createModelFromFile(cjhDevice, "models/dragon.obj");
+		model->m_render_system = "Simple";
+		auto dragon = CjhGameObject::createGameObject();
+		dragon.model = model;
+		dragon.transform.translation = glm::vec3(.5f, .2f, 0.5f);
+		dragon.transform.scale = glm::vec3(1.0f, 1.0f, 1.0f);
+		dragon.transform.setIsVulkanModel(true);
+		gameObjects.emplace(dragon.getId(), std::move(dragon));
 
-		std::shared_ptr<CjhModel> model = CjhModel::createModelFromFile(cjhDevice, "models/quad.obj");
+		model = CjhModel::createModelFromFile(cjhDevice, "models/quad.obj");
+		model->m_render_system = "Texture";
 		auto floor = CjhGameObject::createGameObject();
 		floor.model = model;
 		floor.transform.translation = {0.f, .5f, 0.f};

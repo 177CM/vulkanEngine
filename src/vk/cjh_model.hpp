@@ -73,13 +73,13 @@ namespace cjh
 
     void bind(VkCommandBuffer commandBuffer);
     void draw(VkCommandBuffer commandBuffer);
+    std::string m_render_system = {};
 
   private:
     void createVertexBuffers(const std::vector<Vertex> &vertices);
     void createIndexBuffers(const std::vector<uint32_t> &indices);
 
     CjhDevice &cjhDevice;
-
     std::unique_ptr<CjhBuffer> vertexBuffer;
     uint32_t vertexCount;
 
