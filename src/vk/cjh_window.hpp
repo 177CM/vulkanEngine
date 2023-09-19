@@ -25,7 +25,11 @@ namespace cjh
     void createWindowSurface(VkInstance instance, VkSurfaceKHR *surface);
 
   private:
+    // call back function
     static void framebufferResizeCallback(GLFWwindow *window, int width, int height);
+    static void dropCallback(GLFWwindow *window, int count, const char **paths);
+    static void cursorPositionCallback(GLFWwindow *window, double xpos, double ypos);
+
     void initWindow();
 
     int width;

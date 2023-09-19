@@ -3,9 +3,12 @@
 namespace cjh
 {
     CjhUI::CjhUI(CjhDevice *cjhDevice, CjhWindow *cjhWindow, CjhRenderer *cjhRenderer)
-        : m_pDevice(cjhDevice), m_pWindow(cjhWindow), m_pRenderer(cjhRenderer) {}
+        : m_pDevice(cjhDevice), m_pWindow(cjhWindow), m_pRenderer(cjhRenderer)
+    {
+        Init();
+    }
 
-    void CjhUI::Init(VkDescriptorPool descriptorPool)
+    void CjhUI::Init()
     {
         // Setup Dear ImGui context
         IMGUI_CHECKVERSION();
@@ -20,6 +23,31 @@ namespace cjh
         // ImGui::StyleColorsLight();
 
         // Setup Platform/Renderer backends
+        // Create Descriptor Pool
+        {
+            VkDescriptorPoolSize pool_sizes[] =
+                {
+                    {VK_DESCRIPTOR_TYPE_SAMPLER, 1000},
+                    {VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1000},
+                    {VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE, 1000},
+                    {VK_DESCRIPTOR_TYPE_STORAGE_IMAGE, 1000},
+                    {VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER, 1000},
+                    {VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER, 1000},
+                    {VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1000},
+                    {VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1000},
+                    {VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, 1000},
+                    {VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC, 1000},
+                    {VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT, 1000}};
+            VkDescriptorPoolCreateInfo pool_info = {};
+            pool_info.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
+            pool_info.flags = VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT;
+            pool_info.maxSets = 1000 * IM_ARRAYSIZE(pool_sizes);
+            pool_info.poolSizeCount = (uint32_t)IM_ARRAYSIZE(pool_sizes);
+            pool_info.pPoolSizes = pool_sizes;
+            auto err = vkCreateDescriptorPool(m_pDevice->device(), &pool_info, nullptr, &m_UIdescriptorPool);
+            check_vk_result(err);
+        }
+
         ImGui_ImplGlfw_InitForVulkan(m_pWindow->getGLFWwindow(), true);
         ImGui_ImplVulkan_InitInfo init_info = {};
         init_info.Instance = m_pDevice->instance();
@@ -28,7 +56,7 @@ namespace cjh
         init_info.QueueFamily = m_pDevice->findPhysicalQueueFamilies().graphicsFamily;
         init_info.Queue = m_pDevice->graphicsQueue();
         init_info.PipelineCache = VK_NULL_HANDLE;
-        init_info.DescriptorPool = descriptorPool;
+        init_info.DescriptorPool = m_UIdescriptorPool;
         init_info.Subpass = 0;
         init_info.MinImageCount = 3;
         init_info.ImageCount = 3;

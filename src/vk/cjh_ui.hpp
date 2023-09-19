@@ -43,13 +43,15 @@ namespace cjh
         CjhDevice *m_pDevice;
         CjhWindow *m_pWindow;
         CjhRenderer *m_pRenderer;
+        VkDescriptorPool m_UIdescriptorPool; // ui descriptorpool
 
     public:
-        void NewFrame();
+        void
+        NewFrame();
         void Draw();
         CjhUI(CjhDevice *cjhDevice, CjhWindow *cjhWindow, CjhRenderer *cjhRenderer);
         ~CjhUI();
-        void Init(VkDescriptorPool descriptorPool);
+        void Init();
 
         // helper function
 
