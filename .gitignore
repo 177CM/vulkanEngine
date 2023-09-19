@@ -1,0 +1,95 @@
+# 忽略操作系统生成的文件
+.DS_Store
+Thumbs.db
+
+# 忽略编辑器/IDE生成的文件
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# 忽略依赖管理工具生成的文件和文件夹
+node_modules/
+npm-debug.log
+yarn-error.log
+*.lock
+*.log
+
+# 忽略编译或生成的文件
+/build/
+/dist/
+/out/
+/shaders/spv/
+
+# 忽略临时文件
+*.swp
+*.swo
+
+# 忽略环境配置文件，如果你有敏感信息
+.env
+.env.local
+.env.*.local
+
+# 忽略本地配置文件
+config/*.local.json
+
+# 忽略测试或调试相关文件
+test/
+tests/
+
+# 忽略日志文件
+logs/
+
+# 忽略缓存文件
+.cache/
+
+# 忽略临时目录
+/tmp/
+.temp/
+
+# 忽略备份文件
+*.bak
+*.backup
+
+# 忽略数据库文件
+*.db
+
+# 忽略生成的文档和API文档
+*.doc
+*.docx
+*.pdf
+*.html
+
+# 忽略压缩文件
+*.zip
+*.rar
+
+# 忽略图像和媒体文件
+*.jpeg
+*.gif
+*.svg
+*.mp3
+*.mp4
+
+# 忽略日志和输出文件
+*.log
+
+# 忽略配置文件
+*.config
+
+# 忽略IDE设置文件
+.editorconfig
+
+# 忽略自动生成的文件
+*.iml
+*.ipr
+*.iws
+
+# 忽略缓存目录
+.cache/
+
+# 忽略Jupyter Notebook生成的文件
+.ipynb_checkpoints/
+
+# 忽略临时构建目录
+/build/
