@@ -80,7 +80,8 @@ namespace cjh
 		TextureRenderSystem textureRenderSystem{
 			cjhDevice,
 			cjhRenderer.getSwapChainRenderPass(),
-			globalSetLayout->getDescriptorSetLayout()};
+			globalSetLayout->getDescriptorSetLayout(),
+			"../resources/texture/texture.jpg"};
 
 		CjhCamera camera{};
 

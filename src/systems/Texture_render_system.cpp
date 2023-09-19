@@ -20,10 +20,9 @@ namespace cjh
     glm::mat4 normalMatrix{1.f};
   };
 
-  TextureRenderSystem::TextureRenderSystem(CjhDevice &device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout)
-      : cjhDevice{device}, m_cjhImage(device, "../resources/texture/texture.jpg")
+  TextureRenderSystem::TextureRenderSystem(CjhDevice &device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout, std::string path)
+      : cjhDevice{device}, m_cjhImage(device, path)
   {
-
     createPipelineLayout(globalSetLayout);
     createPipeline(renderPass);
   }
@@ -90,6 +89,16 @@ namespace cjh
         "shaders/spv/texture_shader.vert.spv",
         "shaders/spv/texture_shader.frag.spv",
         pipelineConfig);
+  }
+
+  void TextureRenderSystem::createImages(std::vector<std::string> path)
+  {
+    //  m_cjhImages.resize(path.size());
+    //  for (auto i = 0; i < m_cjhImages.size(); i++)
+    //  {
+    //    CjhImage temp(cjhDevice, path[i]);
+    //    m_cjhImages.push_back(temp);
+    //  }
   }
 
   void TextureRenderSystem::renderGameObjects(

@@ -19,7 +19,7 @@ namespace cjh
   class TextureRenderSystem
   {
   public:
-    TextureRenderSystem(CjhDevice &device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout);
+    TextureRenderSystem(CjhDevice &device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout, std::string paths);
     ~TextureRenderSystem();
 
     TextureRenderSystem(const TextureRenderSystem &) = delete;
@@ -28,9 +28,11 @@ namespace cjh
     void renderGameObjects(FrameInfo &frameInfo);
 
   private:
+    void createImages(std::vector<std::string> path);
     void createPipelineLayout(VkDescriptorSetLayout globalSetLayout);
     void createPipeline(VkRenderPass renderPass);
     CjhImage m_cjhImage;
+    std::vector<CjhImage> m_cjhImages;
     CjhDevice &cjhDevice;
 
     std::unique_ptr<CjhPipeline> cjhPipeline;
