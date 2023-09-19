@@ -35,7 +35,6 @@ namespace cjh
 				.setMaxSets(CjhSwapChain::MAX_FRAMES_IN_FLIGHT)
 				.addPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, CjhSwapChain::MAX_FRAMES_IN_FLIGHT)
 				.build();
-		cjhUI.Init(globalPool->get());
 		loadGameObjects();
 	}
 

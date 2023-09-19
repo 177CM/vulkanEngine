@@ -2,6 +2,7 @@
 
 // std
 #include <stdexcept>
+#include <iostream>
 
 namespace cjh
 {
@@ -26,6 +27,8 @@ namespace cjh
     window = glfwCreateWindow(width, height, windowName.c_str(), nullptr, nullptr);
     glfwSetWindowUserPointer(window, this);
     glfwSetFramebufferSizeCallback(window, framebufferResizeCallback);
+    glfwSetDropCallback(window, dropCallback);
+    glfwSetCursorPosCallback(window, cursorPositionCallback);
   }
 
   void CjhWindow::createWindowSurface(VkInstance instance, VkSurfaceKHR *surface)
@@ -42,6 +45,20 @@ namespace cjh
     cjhWindow->framebufferResized = true;
     cjhWindow->width = width;
     cjhWindow->height = height;
+  }
+
+  void CjhWindow::dropCallback(GLFWwindow *window, int count, const char **paths)
+  {
+    int i;
+    for (i = 0; i < count; i++)
+    {
+      // std::cout << (std::string(paths[i])) << std::endl;
+    }
+  }
+
+  void CjhWindow::cursorPositionCallback(GLFWwindow *window, double xpos, double ypos)
+  {
+    // std::cout << "(" << xpos << "," << ypos << ")" << std::endl;
   }
 
 } // namespace lve
